@@ -3,18 +3,38 @@
   <head>
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
   </head>
   <body>
-    <h1>Get your cet score</h1>
-    <form action="/find" method="post">
+    <h1>Get your cet score(暂时不可用，什么时候可用我也不知道)</h1>
+    <form id="forget" action="/find" method="post">
         <select name="province"></select>
         <select name="school"></select>
         <select name="type">
             <option value="1">Cet-4</option>
             <option value="2">Cet-6</option>
         </select>
-        <input type="number" name="classroom" placeholder="最可能的考场号">
+        <input type="text" name="classroom" placeholder="最可能的考场号" maxlength="3">
+        <input type="text" name="name" placeholder="姓名" maxlength="3">
         <button type="submit">查询</button>
     </form>
+    <p>Or</p>
+    <h1>我记得准考证号</h1>
+    <form id="remember" action="/find" method="post">
+      <input type="text" name="number" placeholder="准考证号" maxlength="15">
+      <input type="text" name="name" placeholder="姓名" maxlength="3">
+      <button type="submit">查询</button>
+    </form>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('#remember').submit(function(e){
+          var candidateNubmer = $('#remember input[name=number]').val();
+          if(candidateNubmer.length != 15){
+            alert('准考证号为15位，谢谢');
+            return false;
+          }
+        });
+      });
+    </script>
   </body>
 </html>

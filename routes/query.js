@@ -1,14 +1,18 @@
 var http = require('http');
+var querystring = require('querystring');
 var zlib = require('zlib');
 
 var Query =  function(zkzh, xm){
-    this.querystring = '?zkzh=' + zkzh + '&xm=' + xm;
+    this.querystring = querystring.stringify({
+        zkzh: zkzh,
+        xm: xm
+    });
 
     this.options = {
         url: 'www.chsi.com.cn',
         encoding: null,
         host: 'www.chsi.com.cn',
-        path: '/cet/query' + this.querystring,
+        path: '/cet/query?' + this.querystring,
         method: 'GET',
         headers: {
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
@@ -26,17 +30,16 @@ var Query =  function(zkzh, xm){
 
 Query.prototype.sendRequest = function(){
     var self = this;
-    // console.log(this.querystring);
     return new Promise(function(resolve, reject){
             var req = http.request(self.options, function(res){
             var gunzip = zlib.createGunzip();
             res.pipe(gunzip);
             var data = '';
-            res.setEncoding('binary');
             gunzip.on('data', function(chunk){                
                 data += chunk;
             }).on('end', function(res){
-                resolve(data);
+                var result = Query.prototype.handleHtml(data);
+                resolve(result);
             });
         });
 
@@ -46,6 +49,29 @@ Query.prototype.sendRequest = function(){
 
         req.end();
     });
+};
+
+Query.prototype.handleHtml = function(htmlstring){
+    var result = {};
+    var resultProperty = ['name', 'school', 'type', 'number', 'time', 'score'];
+    htmlstring = htmlstring.replace(/[\r\n\s]/g, '');
+    var tableReg = new RegExp('<tableborder="0"align="center"cellpadding="0"cellspacing="6"class="cetTable">.*</table>', 'g'),
+        trReg = new RegExp('<tr>.*?</tr>', 'g'),
+        scoreReg = new RegExp('\d+', 'g');
+    var tableArr = htmlstring.match(tableReg);
+    var table, trArr, item, i, scoreArr;
+    if(tableArr == null){
+        result.success = false;
+    } else {
+        result.success = true;
+        table = tableArr[0];
+        trArr = table.match(trReg);
+        for(i = 0; i < 6; i++){
+            item = trArr[i].replace(/<.*?>/g,'');
+            result[resultProperty[i]] = item;
+        }
+    }
+    return result;
 };
 
 module.exports = Query;
