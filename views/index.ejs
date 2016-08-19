@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1>Get your cet score</h1>
+    <form action="/find" method="post">
+        <select name="province"></select>
+        <select name="school"></select>
+        <select name="type">
+            <option value="1">Cet-4</option>
+            <option value="2">Cet-6</option>
+        </select>
+        <input type="number" name="classroom" placeholder="最可能的考场号">
+        <button type="submit">查询</button>
+    </form>
+  </body>
+</html>
