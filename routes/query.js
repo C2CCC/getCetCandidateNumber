@@ -62,6 +62,7 @@ Query.prototype.handleHtml = function(htmlstring){
     var table, trArr, item, i, scoreArr;
     if(tableArr == null){
         result.success = false;
+        result.name = '未找到对应分数';
     } else {
         result.success = true;
         table = tableArr[0];

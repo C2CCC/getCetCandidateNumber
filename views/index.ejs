@@ -8,7 +8,11 @@
   <body>
     <h1>Get your cet score(暂时不可用，什么时候可用我也不知道)</h1>
     <form id="forget" action="/find" method="post">
-        <select name="province"></select>
+        <select name="province">
+          <% for(var key in province){ %>
+            <option value="<%= province[key] %>"><%= key %></option>
+          <% } %>
+        </select>
         <select name="school"></select>
         <select name="type">
             <option value="1">Cet-4</option>
@@ -27,6 +31,10 @@
     </form>
     <script type="text/javascript">
       $(document).ready(function(){
+        //init
+        initSchoolSelect();
+
+        //form validator
         $('#remember').submit(function(e){
           var candidateNubmer = $('#remember input[name=number]').val();
           if(candidateNubmer.length != 15){
@@ -34,6 +42,19 @@
             return false;
           }
         });
+
+        //select linkage
+        $('[name=province]').change(initSchoolSelect);
+
+        function initSchoolSelect(){
+          var school = <%- JSON.stringify(school) %>;
+          $('[name=school]').html('');
+          var province = $('[name=province] option:selected').text();
+          $.each(school[province][1], function(key, value){
+            var option = '<option value="'+ value +'">'+ value +'</option>';
+            $('[name=school]').append(option);
+          });
+        }
       });
     </script>
   </body>
