@@ -19,7 +19,8 @@ var prcode, obj;
 
 for(var key in school){//province loop
     prcode = school[key][0];
-    prArr = new Array();
+    // prArr = new Array();
+    prObj = new Object();
     school[key][1].forEach(function(vs, ks){//school loop
         item = new Array();
         dict[prcode].forEach(function(vd, kd){//dict loop
@@ -30,7 +31,6 @@ for(var key in school){//province loop
         // obj = new Object();
         // obj[vs] = item;
         // prArr.push(obj);
-        prObj = new Object();
         prObj[vs] = item;
     });
     // obj = new Object();

@@ -40,6 +40,8 @@ Query.prototype.sendRequest = function(){
             }).on('end', function(res){
                 var result = Query.prototype.handleHtml(data);
                 resolve(result);
+            }).on('error', function(err){
+                console.log(err);
             });
         });
 
